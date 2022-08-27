@@ -1,10 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RestaurantReviews.Data
 {
@@ -22,6 +16,16 @@ namespace RestaurantReviews.Data
                     FirstName = "Admin",
                     LastName = "User",
                     Email = "admin@admin.com",
+                    IsDeleted = false,
+                    IsUserBlocked = false,
+                    Password = DataHelpers.PasswordEncrypt("password")
+                },
+                new User
+                {
+                    Id = 2,
+                    FirstName = "Jeff",
+                    LastName = "McCann",
+                    Email = "jefe101073@gmail.com",
                     IsDeleted = false,
                     IsUserBlocked = false,
                     Password = DataHelpers.PasswordEncrypt("password")
@@ -103,7 +107,7 @@ namespace RestaurantReviews.Data
                     UserId = 1,
                     Title = "I never knew steak could taste so good!",
                     UserReview = "Wonderful service, the food is top-notch, would recommend for anyone who needs a special occasion.",
-                    RestaurantId = 2,
+                    RestaurantId = 3,
                     PriceRatingId = 3,
                     StarRatingId = 5
                 }

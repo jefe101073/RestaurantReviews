@@ -16,7 +16,8 @@ To Set-up the Database:
 
 3.  Open a Package Manager Console under View -> Other Windows
 4.  Make sure the dropdown for "Default project:" is set to RestaurantReviews.Data
-5.  Issue the command "Update-Database" in the Package Manager Console.
+5.  Issue the command "Update-Database" in the Package Manager Console.  (if that fails, issue the command:  "EntityFrameworkCore\Update-Database")
 
 
 ## Functionality
+There are 3 controllers 

@@ -15,7 +15,7 @@ namespace RestaurantReviews.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<UserDto> GetAllActiveUsers() => _userDao.GetActiveUsers();
+        public IEnumerable<UserDto> GetActiveUsers() => _userDao.GetActiveUsers();
 
         [HttpGet]
         [Route("{id}")]
@@ -28,5 +28,18 @@ namespace RestaurantReviews.API.Controllers
         [HttpDelete]
         [Route("{id}/{currentUserId}")]
         public void DeleteUser(int id, int currentUserId) => _userDao.DeleteUser(id, currentUserId);
+
+        [HttpPost]
+        [Route("authenticate/{email}/{password}")]
+        public bool AuthenticateUser(string email, string password) => _userDao.AuthenticateUser(email, password);
+
+        [HttpPost]
+        [Route("block/{id}")]
+        public void BlockUser(int id) => _userDao.BlockUser(id);
+
+        [HttpPost]
+        [Route("unblock/{id}")]
+        public void UnblockUser(int id) => _userDao.UnBlockUser(id);
+
     }
 }

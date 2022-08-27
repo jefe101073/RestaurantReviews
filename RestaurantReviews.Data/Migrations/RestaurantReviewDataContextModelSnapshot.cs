@@ -88,10 +88,10 @@ namespace RestaurantReviews.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("DeletedByUserId")
+                    b.Property<int?>("DeletedByUserId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("DeletedOn")
+                    b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
@@ -128,8 +128,6 @@ namespace RestaurantReviews.Data.Migrations
                             Id = 1,
                             Address1 = "46 18th Street",
                             City = "Pittsburgh",
-                            DeletedByUserId = 0,
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Sandwich Shop",
                             IsDeleted = false,
                             Name = "Primanti Brothers",
@@ -143,8 +141,6 @@ namespace RestaurantReviews.Data.Migrations
                             Id = 2,
                             Address1 = "1279 Camp Horne Road",
                             City = "Pittsburgh",
-                            DeletedByUserId = 0,
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Pizza and Wings",
                             IsDeleted = false,
                             Name = "Pizza Hut",
@@ -158,8 +154,6 @@ namespace RestaurantReviews.Data.Migrations
                             Id = 3,
                             Address1 = "634 Camp Horne Road",
                             City = "Pittsburgh",
-                            DeletedByUserId = 0,
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Upscale-casual eatery featuring modern American dishes including crab cakes, beef tenderloin & veal.",
                             IsDeleted = false,
                             Name = "Willow",
@@ -178,10 +172,10 @@ namespace RestaurantReviews.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseSerialColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DeletedByUserId")
+                    b.Property<int?>("DeletedByUserId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("DeletedOn")
+                    b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsDeleted")
@@ -215,8 +209,6 @@ namespace RestaurantReviews.Data.Migrations
                         new
                         {
                             Id = 1,
-                            DeletedByUserId = 0,
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             PriceRatingId = 2,
                             RestaurantId = 1,
@@ -228,8 +220,6 @@ namespace RestaurantReviews.Data.Migrations
                         new
                         {
                             Id = 2,
-                            DeletedByUserId = 0,
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             PriceRatingId = 1,
                             RestaurantId = 2,
@@ -241,11 +231,9 @@ namespace RestaurantReviews.Data.Migrations
                         new
                         {
                             Id = 3,
-                            DeletedByUserId = 0,
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             PriceRatingId = 3,
-                            RestaurantId = 2,
+                            RestaurantId = 3,
                             StarRatingId = 5,
                             Title = "I never knew steak could taste so good!",
                             UserId = 1,
@@ -313,10 +301,10 @@ namespace RestaurantReviews.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseSerialColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DeletedByUserId")
+                    b.Property<int?>("DeletedByUserId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("DeletedOn")
+                    b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
@@ -347,13 +335,21 @@ namespace RestaurantReviews.Data.Migrations
                         new
                         {
                             Id = 1,
-                            DeletedByUserId = 0,
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin.com",
                             FirstName = "Admin",
                             IsDeleted = false,
                             IsUserBlocked = false,
                             LastName = "User",
+                            Password = "hZZDS7+9BmZMQxPCT5trrO/VKbSo5+34w/c/U1BZags="
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Email = "jefe101073@gmail.com",
+                            FirstName = "Jeff",
+                            IsDeleted = false,
+                            IsUserBlocked = false,
+                            LastName = "McCann",
                             Password = "hZZDS7+9BmZMQxPCT5trrO/VKbSo5+34w/c/U1BZags="
                         });
                 });

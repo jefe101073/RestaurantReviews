@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace RestaurantReviews.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,8 +40,8 @@ namespace RestaurantReviews.Data.Migrations
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     PriceRatingId = table.Column<int>(type: "integer", nullable: false),
                     StarRatingId = table.Column<int>(type: "integer", nullable: false),
-                    DeletedByUserId = table.Column<int>(type: "integer", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    DeletedByUserId = table.Column<int>(type: "integer", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -61,8 +61,8 @@ namespace RestaurantReviews.Data.Migrations
                     PriceRatingId = table.Column<int>(type: "integer", nullable: false),
                     StarRatingId = table.Column<int>(type: "integer", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    DeletedByUserId = table.Column<int>(type: "integer", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    DeletedByUserId = table.Column<int>(type: "integer", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -95,8 +95,8 @@ namespace RestaurantReviews.Data.Migrations
                     Password = table.Column<string>(type: "text", nullable: false),
                     IsUserBlocked = table.Column<bool>(type: "boolean", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    DeletedByUserId = table.Column<int>(type: "integer", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    DeletedByUserId = table.Column<int>(type: "integer", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -119,9 +119,9 @@ namespace RestaurantReviews.Data.Migrations
                 columns: new[] { "Id", "Address1", "Address2", "City", "DeletedByUserId", "DeletedOn", "Description", "IsDeleted", "Name", "PostalCode", "PriceRatingId", "StarRatingId", "State" },
                 values: new object[,]
                 {
-                    { 1, "46 18th Street", null, "Pittsburgh", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Sandwich Shop", false, "Primanti Brothers", "15222", 2, 4, "PA" },
-                    { 2, "1279 Camp Horne Road", null, "Pittsburgh", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Pizza and Wings", false, "Pizza Hut", "15237", 1, 3, "PA" },
-                    { 3, "634 Camp Horne Road", null, "Pittsburgh", 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Upscale-casual eatery featuring modern American dishes including crab cakes, beef tenderloin & veal.", false, "Willow", "15237", 3, 5, "PA" }
+                    { 1, "46 18th Street", null, "Pittsburgh", null, null, "Sandwich Shop", false, "Primanti Brothers", "15222", 2, 4, "PA" },
+                    { 2, "1279 Camp Horne Road", null, "Pittsburgh", null, null, "Pizza and Wings", false, "Pizza Hut", "15237", 1, 3, "PA" },
+                    { 3, "634 Camp Horne Road", null, "Pittsburgh", null, null, "Upscale-casual eatery featuring modern American dishes including crab cakes, beef tenderloin & veal.", false, "Willow", "15237", 3, 5, "PA" }
                 });
 
             migrationBuilder.InsertData(
@@ -129,9 +129,9 @@ namespace RestaurantReviews.Data.Migrations
                 columns: new[] { "Id", "DeletedByUserId", "DeletedOn", "IsDeleted", "PriceRatingId", "RestaurantId", "StarRatingId", "Title", "UserId", "UserReview" },
                 values: new object[,]
                 {
-                    { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 2, 1, 4, "A Real Pittsburgh Tradition", 1, "Best sandwiches with cole slaw and fries in the world." },
-                    { 2, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 1, 2, 3, "No wonder Pizza Hut has so many locations!", 1, "Consistant quality and very affordable." },
-                    { 3, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 3, 2, 5, "I never knew steak could taste so good!", 1, "Wonderful service, the food is top-notch, would recommend for anyone who needs a special occasion." }
+                    { 1, null, null, false, 2, 1, 4, "A Real Pittsburgh Tradition", 1, "Best sandwiches with cole slaw and fries in the world." },
+                    { 2, null, null, false, 1, 2, 3, "No wonder Pizza Hut has so many locations!", 1, "Consistant quality and very affordable." },
+                    { 3, null, null, false, 3, 3, 5, "I never knew steak could taste so good!", 1, "Wonderful service, the food is top-notch, would recommend for anyone who needs a special occasion." }
                 });
 
             migrationBuilder.InsertData(
@@ -149,7 +149,11 @@ namespace RestaurantReviews.Data.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "DeletedByUserId", "DeletedOn", "Email", "FirstName", "IsDeleted", "IsUserBlocked", "LastName", "Password" },
-                values: new object[] { 1, 0, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@admin.com", "Admin", false, false, "User", "hZZDS7+9BmZMQxPCT5trrO/VKbSo5+34w/c/U1BZags=" });
+                values: new object[,]
+                {
+                    { 1, null, null, "admin@admin.com", "Admin", false, false, "User", "hZZDS7+9BmZMQxPCT5trrO/VKbSo5+34w/c/U1BZags=" },
+                    { 2, null, null, "jefe101073@gmail.com", "Jeff", false, false, "McCann", "hZZDS7+9BmZMQxPCT5trrO/VKbSo5+34w/c/U1BZags=" }
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

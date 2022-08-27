@@ -18,6 +18,8 @@ builder.Services.AddDbContext<RestaurantReviewDataContext>(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IRestaurantDao, RestaurantDao>();
+builder.Services.AddScoped<IReviewDao, ReviewDao>();
 builder.Services.AddScoped<IUserDao, UserDao>();
 
 var app = builder.Build();

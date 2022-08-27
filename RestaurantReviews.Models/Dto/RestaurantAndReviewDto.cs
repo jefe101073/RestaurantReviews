@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RestaurantReviews.Models.Dto
+﻿namespace RestaurantReviews.Models.Dto
 {
     /// <summary>
     /// This DTO is meant to be helpful for sending an initial review where both the restaurant and review need to be added

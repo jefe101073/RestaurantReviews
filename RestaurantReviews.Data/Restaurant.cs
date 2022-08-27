@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace RestaurantReviews.Data
 {
@@ -27,7 +22,7 @@ namespace RestaurantReviews.Data
         public bool IsDeleted { get; set; } = false;
         public int PriceRatingId { get; set; } // Calculated value based on reviewer's estimate, value will update when review is added.
         public int StarRatingId { get; set; } // Calculated value based on average reviews, value will update when review is added.
-        public int DeletedByUserId { get; set; }
-        public DateTime DeletedOn { get; set; }
+        public int? DeletedByUserId { get; set; }
+        public DateTime? DeletedOn { get; set; }
     }
 }

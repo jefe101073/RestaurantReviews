@@ -1,5 +1,4 @@
-﻿
-using RestaurantReviews.API.Controllers;
+﻿using RestaurantReviews.API.Controllers;
 using RestaurantReviews.Data;
 using RestaurantReviews.Interfaces.Dao;
 using RestaurantReviews.Models.Dto;
@@ -64,7 +63,7 @@ namespace RestaurantReviews.Tests.Dao
                 }
             };
 
-            // Mock functionality for getting user list only if IsDeleted is false
+            // Mock functionality
             _userDaoMock.Setup(x => x.GetActiveUsers()).Returns(UserList.Where(u => u.IsDeleted == false));
 
             _userDaoMock.Setup(x => x.GetUser(It.IsAny<int>())).Returns((int i) => UserList.FirstOrDefault(z => z.Id == i));
@@ -86,6 +85,18 @@ namespace RestaurantReviews.Tests.Dao
                 return;
             }).Verifiable();
 
+            _userDaoMock.Setup(x => x.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(
+                (string email, string password) =>
+                {
+                    var user = UserList.FirstOrDefault(e => e.Email == email);
+                    if(user == null || user.Password == null)
+                    {
+                        return false;
+                    }
+                    var decryptedPassword = DataHelpers.PasswordDecrypt(user.Password);
+                    return password.Equals(decryptedPassword, StringComparison.Ordinal);
+                });
+
         }
 
         [TestCleanup()]
@@ -96,7 +107,7 @@ namespace RestaurantReviews.Tests.Dao
         }
 
         [TestMethod]
-        public void CanGetAllActiveUsers()
+        public void CanGetActiveUsers()
         {
             // Arrange
             var controller = GetControllerInstance();
@@ -126,7 +137,7 @@ namespace RestaurantReviews.Tests.Dao
             };
 
             // Act
-            var actualUsers = controller.GetAllActiveUsers().ToList();
+            var actualUsers = controller.GetActiveUsers().ToList();
 
             // Assert
             Assert.IsNotNull(actualUsers);
@@ -220,6 +231,31 @@ namespace RestaurantReviews.Tests.Dao
 
             Assert.IsTrue(deletedUser.DeletedOn > DateTime.Today);
             Assert.IsTrue(deletedUser.DeletedOn < DateTime.Today.AddDays(1));
+        }
+
+        [TestMethod]
+        public void CanAuthenticateUser()
+        {
+            // Arrange
+            var controller = GetControllerInstance();
+
+            var expectedUser = new UserDto
+            {
+                Id = 4,
+                FirstName = "Add",
+                LastName = "McAdderson",
+                Email = "addMe@gmail.com",
+                IsDeleted = false,
+                IsUserBlocked = false,
+                Password = DataHelpers.PasswordEncrypt("password")
+            };
+            controller.AddUser(expectedUser);
+
+            // Act
+            var canAuthenticate = controller.AuthenticateUser(expectedUser.Email, "password");
+
+            // Assert
+            Assert.IsTrue(canAuthenticate);
         }
     }
 }
