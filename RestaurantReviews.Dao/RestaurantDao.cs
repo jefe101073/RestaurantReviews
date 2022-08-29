@@ -1,9 +1,8 @@
 ﻿using RestaurantReviews.Data;
 using RestaurantReviews.Interfaces.Dao;
 using RestaurantReviews.Models.Dto;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Data.Entity.Core;
-using System.Xml.Linq;
 
 namespace RestaurantReviews.Dao
 {
@@ -54,8 +53,8 @@ namespace RestaurantReviews.Dao
                 State = myRestaurant.State,
                 PostalCode = myRestaurant.PostalCode,
                 IsDeleted = myRestaurant.IsDeleted,
-                PriceRatingId = myRestaurant.PriceRatingId,
-                StarRatingId = myRestaurant.StarRatingId,
+                AveragePriceRating = myRestaurant.AveragePriceRating,
+                AverageStarRating = myRestaurant.AverageStarRating,
                 DeletedByUserId = myRestaurant.DeletedByUserId,
                 DeletedOn = myRestaurant.DeletedOn
             };
@@ -72,6 +71,15 @@ namespace RestaurantReviews.Dao
             restaurant.IsDeleted = true;
             restaurant.DeletedByUserId = currentUserId;
             restaurant.DeletedOn = DateTime.UtcNow;
+            
+            // Deleting a restaurant also deletes all reviews associated with it
+            var reviews = await _context.Reviews.Where(z => z.RestaurantId == id).ToListAsync();
+            foreach(var review in reviews)
+            {
+                review.IsDeleted = true;
+                review.DeletedByUserId = currentUserId;
+                review.DeletedOn = DateTime.UtcNow;
+            }
             await _context.SaveChangesAsync();
         }
 
@@ -90,8 +98,8 @@ namespace RestaurantReviews.Dao
                                   State = restaurant.State,
                                   PostalCode = restaurant.PostalCode,
                                   IsDeleted = restaurant.IsDeleted,
-                                  PriceRatingId = restaurant.PriceRatingId,
-                                  StarRatingId = restaurant.StarRatingId,
+                                  AveragePriceRating = restaurant.AveragePriceRating,
+                                  AverageStarRating = restaurant.AverageStarRating,
                                   DeletedByUserId = restaurant.DeletedByUserId,
                                   DeletedOn = restaurant.DeletedOn
                               };
@@ -118,8 +126,8 @@ namespace RestaurantReviews.Dao
                                   State = restaurant.State,
                                   PostalCode = restaurant.PostalCode,
                                   IsDeleted = restaurant.IsDeleted,
-                                  PriceRatingId = restaurant.PriceRatingId,
-                                  StarRatingId = restaurant.StarRatingId,
+                                  AveragePriceRating = restaurant.AveragePriceRating,
+                                  AverageStarRating = restaurant.AverageStarRating,
                                   DeletedByUserId = restaurant.DeletedByUserId,
                                   DeletedOn = restaurant.DeletedOn
                               };
@@ -145,8 +153,8 @@ namespace RestaurantReviews.Dao
                 State = restaurant.State,
                 PostalCode = restaurant.PostalCode,
                 IsDeleted = restaurant.IsDeleted,
-                PriceRatingId = restaurant.PriceRatingId,
-                StarRatingId = restaurant.StarRatingId,
+                AveragePriceRating = restaurant.AveragePriceRating,
+                AverageStarRating = restaurant.AverageStarRating,
                 DeletedByUserId = restaurant.DeletedByUserId,
                 DeletedOn = restaurant.DeletedOn
             };

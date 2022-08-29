@@ -15,9 +15,9 @@ namespace RestaurantReviews.Data
         [Required]
         public string? UserReview { get; set; }
         [Required]
-        public int PriceRatingId { get; set; }
+        public int PriceRatingId { get; set; } // Int based on values $, $$, $$$, $$$$
         [Required]
-        public int StarRatingId { get; set; }
+        public int StarRatingId { get; set; } // Int based on values *, **, ***, ****, *****
         [Required]
         public bool IsDeleted { get; set; } = false;
         public int? DeletedByUserId { get; set; }

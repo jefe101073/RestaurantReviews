@@ -85,8 +85,8 @@ namespace RestaurantReviews.Tests.ControllersTests
                     State = "PA",
                     PostalCode = "15237",
                     IsDeleted = false,
-                    PriceRatingId = 1,
-                    StarRatingId = 1,
+                    AveragePriceRating = 1,
+                    AverageStarRating = 1,
                     DeletedByUserId = null,
                     DeletedOn = null
                 },
@@ -101,8 +101,8 @@ namespace RestaurantReviews.Tests.ControllersTests
                     State = "PA",
                     PostalCode = "15239",
                     IsDeleted = false,
-                    PriceRatingId = 1,
-                    StarRatingId = 1,
+                    AveragePriceRating = 1,
+                    AverageStarRating = 1,
                     DeletedByUserId = null,
                     DeletedOn = null
                 }
@@ -124,8 +124,8 @@ namespace RestaurantReviews.Tests.ControllersTests
                 Assert.AreEqual(expectedRestaurants[i].City, actualRestaurants[i].City);
                 Assert.AreEqual(expectedRestaurants[i].State, actualRestaurants[i].State);
                 Assert.AreEqual(expectedRestaurants[i].PostalCode, actualRestaurants[i].PostalCode);
-                Assert.AreEqual(expectedRestaurants[i].PriceRatingId, actualRestaurants[i].PriceRatingId);
-                Assert.AreEqual(expectedRestaurants[i].StarRatingId, actualRestaurants[i].StarRatingId);
+                Assert.AreEqual(expectedRestaurants[i].AveragePriceRating, actualRestaurants[i].AveragePriceRating);
+                Assert.AreEqual(expectedRestaurants[i].AverageStarRating, actualRestaurants[i].AverageStarRating);
                 Assert.AreEqual(expectedRestaurants[i].IsDeleted, actualRestaurants[i].IsDeleted);
             }
         }
@@ -149,8 +149,8 @@ namespace RestaurantReviews.Tests.ControllersTests
                     State = "PA",
                     PostalCode = "15237",
                     IsDeleted = false,
-                    PriceRatingId = 1,
-                    StarRatingId = 1,
+                    AveragePriceRating = 1,
+                    AverageStarRating = 1,
                     DeletedByUserId = null,
                     DeletedOn = null
                 },
@@ -165,8 +165,8 @@ namespace RestaurantReviews.Tests.ControllersTests
                     State = "PA",
                     PostalCode = "15239",
                     IsDeleted = false,
-                    PriceRatingId = 1,
-                    StarRatingId = 1,
+                    AveragePriceRating = 1,
+                    AverageStarRating = 1,
                     DeletedByUserId = null,
                     DeletedOn = null
                 }
@@ -188,8 +188,8 @@ namespace RestaurantReviews.Tests.ControllersTests
                 Assert.AreEqual(expectedRestaurants[i].City, actualRestaurants[i].City);
                 Assert.AreEqual(expectedRestaurants[i].State, actualRestaurants[i].State);
                 Assert.AreEqual(expectedRestaurants[i].PostalCode, actualRestaurants[i].PostalCode);
-                Assert.AreEqual(expectedRestaurants[i].PriceRatingId, actualRestaurants[i].PriceRatingId);
-                Assert.AreEqual(expectedRestaurants[i].StarRatingId, actualRestaurants[i].StarRatingId);
+                Assert.AreEqual(expectedRestaurants[i].AveragePriceRating, actualRestaurants[i].AveragePriceRating);
+                Assert.AreEqual(expectedRestaurants[i].AverageStarRating, actualRestaurants[i].AverageStarRating);
                 Assert.AreEqual(expectedRestaurants[i].IsDeleted, actualRestaurants[i].IsDeleted);
             }
         }
@@ -211,8 +211,8 @@ namespace RestaurantReviews.Tests.ControllersTests
                 State = "PA",
                 PostalCode = "15239",
                 IsDeleted = false,
-                PriceRatingId = 1,
-                StarRatingId = 1,
+                AveragePriceRating = 1,
+                AverageStarRating = 1,
                 DeletedByUserId = null,
                 DeletedOn = null
             };
@@ -229,8 +229,8 @@ namespace RestaurantReviews.Tests.ControllersTests
             Assert.AreEqual(expectedRestaurant.City, actualRestaurant.City);
             Assert.AreEqual(expectedRestaurant.State, actualRestaurant.State);
             Assert.AreEqual(expectedRestaurant.PostalCode, actualRestaurant.PostalCode);
-            Assert.AreEqual(expectedRestaurant.PriceRatingId, actualRestaurant.PriceRatingId);
-            Assert.AreEqual(expectedRestaurant.StarRatingId, actualRestaurant.StarRatingId);
+            Assert.AreEqual(expectedRestaurant.AveragePriceRating, actualRestaurant.AveragePriceRating);
+            Assert.AreEqual(expectedRestaurant.AverageStarRating, actualRestaurant.AverageStarRating);
             Assert.AreEqual(expectedRestaurant.IsDeleted, actualRestaurant.IsDeleted);
         }
 
@@ -251,8 +251,8 @@ namespace RestaurantReviews.Tests.ControllersTests
                 State = "PA",
                 PostalCode = "15239",
                 IsDeleted = false,
-                PriceRatingId = 1,
-                StarRatingId = 1,
+                AveragePriceRating = 1,
+                AverageStarRating = 1,
                 DeletedByUserId = null,
                 DeletedOn = null
             };
@@ -271,8 +271,8 @@ namespace RestaurantReviews.Tests.ControllersTests
             Assert.AreEqual(expectedRestaurant.City, addedRestaurant.City);
             Assert.AreEqual(expectedRestaurant.State, addedRestaurant.State);
             Assert.AreEqual(expectedRestaurant.PostalCode, addedRestaurant.PostalCode);
-            Assert.AreEqual(expectedRestaurant.PriceRatingId, addedRestaurant.PriceRatingId);
-            Assert.AreEqual(expectedRestaurant.StarRatingId, addedRestaurant.StarRatingId);
+            Assert.AreEqual(expectedRestaurant.AveragePriceRating, addedRestaurant.AveragePriceRating);
+            Assert.AreEqual(expectedRestaurant.AverageStarRating, addedRestaurant.AverageStarRating);
             Assert.AreEqual(expectedRestaurant.IsDeleted, addedRestaurant.IsDeleted);
         }
 

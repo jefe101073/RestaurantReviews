@@ -36,8 +36,8 @@ namespace RestaurantReviews.Tests.DataForTests
                     State = "PA",
                     PostalCode = "15237",
                     IsDeleted = false,
-                    PriceRatingId = 1,
-                    StarRatingId = 1,
+                    AveragePriceRating = 1,
+                    AverageStarRating = 1,
                     DeletedByUserId = null,
                     DeletedOn = null
                 },
@@ -52,8 +52,8 @@ namespace RestaurantReviews.Tests.DataForTests
                     State = "PA",
                     PostalCode = "15239",
                     IsDeleted = false,
-                    PriceRatingId = 1,
-                    StarRatingId = 1,
+                    AveragePriceRating = 1,
+                    AverageStarRating = 1,
                     DeletedByUserId = null,
                     DeletedOn = null
                 },
@@ -68,8 +68,8 @@ namespace RestaurantReviews.Tests.DataForTests
                     State = "IN",
                     PostalCode = "46260",
                     IsDeleted = true,
-                    PriceRatingId = 1,
-                    StarRatingId = 5,
+                    AveragePriceRating = 1,
+                    AverageStarRating = 5,
                     DeletedByUserId = 1,
                     DeletedOn = DateTime.UtcNow
                 }

@@ -5,6 +5,7 @@ namespace RestaurantReviews.Data
 {
     /// <summary>
     /// This class is a static class used to perform some basic functions like encrypt/decrypt passwords to be stored in the DB
+    /// NOTE:  This code is taken from http://net-informations.com/q/faq/encrypt.html
     /// </summary>
     public static class DataHelpers
     {

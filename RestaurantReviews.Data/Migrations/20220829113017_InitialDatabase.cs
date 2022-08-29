@@ -38,8 +38,8 @@ namespace RestaurantReviews.Data.Migrations
                     State = table.Column<string>(type: "text", nullable: false),
                     PostalCode = table.Column<string>(type: "text", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    PriceRatingId = table.Column<int>(type: "integer", nullable: true),
-                    StarRatingId = table.Column<int>(type: "integer", nullable: true),
+                    AveragePriceRating = table.Column<double>(type: "double precision", nullable: true),
+                    AverageStarRating = table.Column<double>(type: "double precision", nullable: true),
                     DeletedByUserId = table.Column<int>(type: "integer", nullable: true),
                     DeletedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -116,12 +116,12 @@ namespace RestaurantReviews.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Restaurants",
-                columns: new[] { "Id", "Address1", "Address2", "City", "DeletedByUserId", "DeletedOn", "Description", "IsDeleted", "Name", "PostalCode", "PriceRatingId", "StarRatingId", "State" },
+                columns: new[] { "Id", "Address1", "Address2", "AveragePriceRating", "AverageStarRating", "City", "DeletedByUserId", "DeletedOn", "Description", "IsDeleted", "Name", "PostalCode", "State" },
                 values: new object[,]
                 {
-                    { 1, "46 18th Street", null, "Pittsburgh", null, null, "Sandwich Shop", false, "Primanti Brothers", "15222", 2, 4, "PA" },
-                    { 2, "1279 Camp Horne Road", null, "Pittsburgh", null, null, "Pizza and Wings", false, "Pizza Hut", "15237", 1, 3, "PA" },
-                    { 3, "634 Camp Horne Road", null, "Pittsburgh", null, null, "Upscale-casual eatery featuring modern American dishes including crab cakes, beef tenderloin & veal.", false, "Willow", "15237", 3, 5, "PA" }
+                    { 1, "46 18th Street", null, 2.0, 4.0, "Pittsburgh", null, null, "Sandwich Shop", false, "Primanti Brothers", "15222", "PA" },
+                    { 2, "1279 Camp Horne Road", null, 1.0, 3.0, "Pittsburgh", null, null, "Pizza and Wings", false, "Pizza Hut", "15237", "PA" },
+                    { 3, "634 Camp Horne Road", null, 3.0, 5.0, "Pittsburgh", null, null, "Upscale-casual eatery featuring modern American dishes including crab cakes, beef tenderloin & veal.", false, "Willow", "15237", "PA" }
                 });
 
             migrationBuilder.InsertData(

@@ -1,4 +1,5 @@
 ﻿using RestaurantReviews.API.Controllers;
+using RestaurantReviews.Data;
 using RestaurantReviews.Interfaces.Dao;
 using RestaurantReviews.Models.Dto;
 using RestaurantReviews.Tests.DataForTests;
@@ -69,6 +70,14 @@ namespace RestaurantReviews.Tests.ControllersTests
                 {
                     var restNextId = TestData.RestaurantList.Count + 1;
                     var revNextId = TestData.ReviewList.Count + 1;
+                    if (target.Restaurant == null)
+                    {
+                        throw new ArgumentException($"Error.  Restaurant Cannot be Null", nameof(target.Review));
+                    }
+                    if (target.Review == null)
+                    {
+                        throw new ArgumentException($"Error.  Review Cannot be Null", nameof(target.Review));
+                    }
                     var restaurant = new RestaurantDto
                     {
                         Id = restNextId,
@@ -237,11 +246,11 @@ namespace RestaurantReviews.Tests.ControllersTests
 
             // Act
             var reviews = await controller.GetActiveReviewsByRestaurantNameAndCityAsync("McDonald's", "PittsBurgh");
-            var actualReviews = reviews.ToList();
+            var actualReviews = reviews?.ToList();
 
             // Assert
             Assert.IsNotNull(actualReviews);
-            Assert.AreEqual(expectedReviews.Count, actualReviews.Count());
+            Assert.AreEqual(expectedReviews.Count, actualReviews.Count);
             for (int i = 0; i < expectedReviews.Count; i++)
             {
                 Assert.AreEqual(expectedReviews[i].Id, actualReviews[i].Id);
@@ -320,9 +329,11 @@ namespace RestaurantReviews.Tests.ControllersTests
                 IsDeleted = false
             };
 
-            var expectedRestaurantAndReview = new AddRestaurantAndReviewDto();
-            expectedRestaurantAndReview.Restaurant = expectedRestaurant;
-            expectedRestaurantAndReview.Review = expectedReview;
+            var expectedRestaurantAndReview = new AddRestaurantAndReviewDto
+            {
+                Restaurant = expectedRestaurant,
+                Review = expectedReview
+            };
 
             // Act
             var actualRestaurantAndReview = await controller.AddRestaurantAndReviewAsync(expectedRestaurantAndReview);
@@ -330,9 +341,9 @@ namespace RestaurantReviews.Tests.ControllersTests
             // Assert
             Assert.IsNotNull(actualRestaurantAndReview);
 
-            Assert.AreEqual(actualRestaurantAndReview.Restaurant.Id, TestData.RestaurantList.Count);
-            Assert.AreEqual(actualRestaurantAndReview.Review.Id, TestData.ReviewList.Count);
-            Assert.AreEqual(actualRestaurantAndReview.Review.RestaurantId, actualRestaurantAndReview.Restaurant.Id);
+            Assert.AreEqual(actualRestaurantAndReview?.Restaurant?.Id, TestData.RestaurantList.Count);
+            Assert.AreEqual(actualRestaurantAndReview?.Review?.Id, TestData.ReviewList.Count);
+            Assert.AreEqual(actualRestaurantAndReview?.Review?.RestaurantId, actualRestaurantAndReview?.Restaurant?.Id);
         }
     }
 }

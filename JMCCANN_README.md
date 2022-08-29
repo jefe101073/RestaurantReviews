@@ -32,6 +32,8 @@ I decided to use Data Access Objects (DAO) to add a layer of separation between 
 
 The database design is also very basic.  I used code-first Entity Framework Core because it works very nicely with Postgres and should be supported on many platforms.  The major tables are User, Restaurant and Review.  The data-types are likewise as simple as possible.
 
+Also, for an extra twist, I added a PriceRating and StarRating table to the database.  This table stores the dollar sign ratings (PriceRating) and the number of stars (StarRating).  The Review table has PriceRatingId and StarRatingId which point to the Ids from these tables.  Every time a review is saved, the Restaurant's AveragePriceRating and AverageStarRating will be re-calculated in the method ReviewDao.cs -> CalculateAndUpdateRestaurantRatingsAsync.
+
 ## Major Functionality
 
 1. Create a user
@@ -65,8 +67,9 @@ The database design is also very basic.  I used code-first Entity Framework Core
 3. Delete a user
 4. Undelete a user
 5. Delete a restaurant
-6. Add price rating and star rating to a review
-7. Every new review will update the restaurant's price rating and star rating 
+6. Deleting a restaurant deletes all associated reviews
+7. Add price rating and star rating to a review
+8. Every new review will update the restaurant's average price rating and star rating
 
 # Things To Consider
 My answers to the things to consider:
@@ -75,5 +78,7 @@ My answers to the things to consider:
 - I decided to use Swagger to add some basic API documentation.  In the documentation, I tried to specify any restrictions or errors that might be thrown because of issues.  Also, Swagger does a very nice job of showing the endpoints, allowing to "Try it out" and documenting the DTOs.
 
 * After you turn your code over for the API, how might you help ensure future developers can feel confident updating it?
-- I added the DAO layer to allow for the API layer to be as clean as possible.  Developers should feel confident because they can simply add/update/remove any functionality by following the same pattern.  If backwards compatibility support is needed, Developers will need to be mindful of Database structural changes and functional changes.  I also added a small set of unit tests for the controllers that implement the DAO functionality so that if breaking changes are made, the unit tests will fail.
+- I added the DAO layer to allow for the API layer to be as clean as possible.  Developers should feel confident because they can simply add/update/remove any functionality by following the same pattern.  If backwards compatibility support is needed, Developers will need to be mindful of Database structural changes and functional changes.  The deletions are not permanent, if something is deleted, the IsDeleted flag is set to true.  This should help the data remain consistant because nothing will be lost forever.  It also adds some audit capabilities if needed.  I also added a small set of unit tests for the controllers that implement the major DAO functionality so that if breaking changes are made, the unit tests will fail.
 
+## Thank you!
+I appreciate the time you take to review my project!  I know how time consuming a large code review can be.  It has been very enjoyable to work on.  Thank you very much for the opportunity.  I hope that my solution is satisfactory, and I would love to hear any positive or negative feedback so that I may improve my coding skills.

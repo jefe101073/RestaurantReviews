@@ -53,8 +53,8 @@ namespace RestaurantReviews.Data
                     City="Pittsburgh", 
                     State = "PA", 
                     PostalCode = "15222",
-                    PriceRatingId = 2,
-                    StarRatingId = 4
+                    AveragePriceRating = 2,
+                    AverageStarRating = 4
                 },
                 new Restaurant
                 {
@@ -65,8 +65,8 @@ namespace RestaurantReviews.Data
                     City = "Pittsburgh",
                     State = "PA",
                     PostalCode = "15237",
-                    PriceRatingId = 1,
-                    StarRatingId = 3
+                    AveragePriceRating = 1,
+                    AverageStarRating = 3
                 },
                 new Restaurant
                 {
@@ -77,8 +77,8 @@ namespace RestaurantReviews.Data
                     City = "Pittsburgh",
                     State = "PA",
                     PostalCode = "15237",
-                    PriceRatingId = 3,
-                    StarRatingId = 5
+                    AveragePriceRating = 3,
+                    AverageStarRating = 5
                 }
             );
             modelBuilder.Entity<Review>().HasData(

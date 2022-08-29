@@ -17,8 +17,8 @@
     public class RestaurantDto : AddRestaurantDto
     {
         public int Id { get; set; }
-        public int? PriceRatingId { get; set; } // Null when created, Calculated value based on reviewer's estimate, value will update when review is added.
-        public int? StarRatingId { get; set; } // Null when created, Calculated value based on average reviews, value will update when review is added.
+        public double? AveragePriceRating { get; set; } // Null when created, Calculated value based on reviewer's estimate, value will update when review is added.
+        public double? AverageStarRating { get; set; } // Null when created, Calculated value based on average reviews, value will update when review is added.
         public int? DeletedByUserId { get; set; }
         public DateTime? DeletedOn { get; set; }
     }

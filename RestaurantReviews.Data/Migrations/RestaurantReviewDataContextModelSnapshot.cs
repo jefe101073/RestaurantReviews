@@ -84,6 +84,12 @@ namespace RestaurantReviews.Data.Migrations
                     b.Property<string>("Address2")
                         .HasColumnType("text");
 
+                    b.Property<double?>("AveragePriceRating")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("AverageStarRating")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("text");
@@ -108,12 +114,6 @@ namespace RestaurantReviews.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("PriceRatingId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("StarRatingId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("State")
                         .IsRequired()
                         .HasColumnType("text");
@@ -127,39 +127,39 @@ namespace RestaurantReviews.Data.Migrations
                         {
                             Id = 1,
                             Address1 = "46 18th Street",
+                            AveragePriceRating = 2.0,
+                            AverageStarRating = 4.0,
                             City = "Pittsburgh",
                             Description = "Sandwich Shop",
                             IsDeleted = false,
                             Name = "Primanti Brothers",
                             PostalCode = "15222",
-                            PriceRatingId = 2,
-                            StarRatingId = 4,
                             State = "PA"
                         },
                         new
                         {
                             Id = 2,
                             Address1 = "1279 Camp Horne Road",
+                            AveragePriceRating = 1.0,
+                            AverageStarRating = 3.0,
                             City = "Pittsburgh",
                             Description = "Pizza and Wings",
                             IsDeleted = false,
                             Name = "Pizza Hut",
                             PostalCode = "15237",
-                            PriceRatingId = 1,
-                            StarRatingId = 3,
                             State = "PA"
                         },
                         new
                         {
                             Id = 3,
                             Address1 = "634 Camp Horne Road",
+                            AveragePriceRating = 3.0,
+                            AverageStarRating = 5.0,
                             City = "Pittsburgh",
                             Description = "Upscale-casual eatery featuring modern American dishes including crab cakes, beef tenderloin & veal.",
                             IsDeleted = false,
                             Name = "Willow",
                             PostalCode = "15237",
-                            PriceRatingId = 3,
-                            StarRatingId = 5,
                             State = "PA"
                         });
                 });

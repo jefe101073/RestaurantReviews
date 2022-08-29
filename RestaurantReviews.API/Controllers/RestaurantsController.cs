@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RestaurantReviews.Dao;
-using RestaurantReviews.Data;
 using RestaurantReviews.Interfaces.Dao;
 using RestaurantReviews.Models.Dto;
 using System.Data.Entity.Core;
@@ -67,6 +65,7 @@ namespace RestaurantReviews.API.Controllers
 
         /// <summary>
         /// Deletes a restaurant by setting the IsDeleted flag, DeletedByUserId and DeletedOn values.  Deleted restaurants cannot have new reviews added.
+        /// NOTE:  Deleting a restaurant also deletes all associated reviews for that restaurant
         /// </summary>
         /// <remarks>
         /// The current user ID is required so that we can track who performed the deletion.

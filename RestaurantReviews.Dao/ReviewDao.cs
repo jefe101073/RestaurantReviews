@@ -1,7 +1,7 @@
 ﻿using RestaurantReviews.Data;
 using RestaurantReviews.Interfaces.Dao;
 using RestaurantReviews.Models.Dto;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Data.Entity.Core;
 
 namespace RestaurantReviews.Dao
@@ -106,17 +106,17 @@ namespace RestaurantReviews.Dao
                 {
                     priceSum = 1; // allow for initial case when new restaurants have null rating
                 }
-                var priceAverage = priceSum / (allReviewsForRestaurant.Count() + 1);
+                var priceAverage = (double)priceSum / (double)(allReviewsForRestaurant.Count() + 1);
 
                 var starSum = allReviewsForRestaurant.Sum(item => item.StarRatingId) + starRatingId;
                 if (starSum == 0)
                 {
                     starSum = 1; // allow for initial case when new restaurants have null rating
                 }
-                var starAverage = starSum / (allReviewsForRestaurant.Count() + 1);
+                var starAverage = (double)starSum / (double)(allReviewsForRestaurant.Count() + 1);
 
-                restaurant.PriceRatingId = priceAverage; // The Ids in PriceRating table are 1, 2, 3... so it's the numerical value
-                restaurant.StarRatingId = starAverage;   // Same idea for star ratings
+                restaurant.AveragePriceRating = priceAverage; // The Ids in PriceRating table are 1, 2, 3... so it's the numerical value
+                restaurant.AverageStarRating = starAverage;   // Same idea for star ratings
                 await _context.SaveChangesAsync();
             }
         }
@@ -182,7 +182,8 @@ namespace RestaurantReviews.Dao
             }
             var reviews = from restaurant in _context.Restaurants
                           join review in _context.Reviews on restaurant.Id equals review.RestaurantId
-                          where restaurant.Name != null && restaurant.Name.ToLower() == name.ToLower() &&
+                          where review.IsDeleted == false && 
+                          restaurant.Name != null && restaurant.Name.ToLower() == name.ToLower() &&
                           restaurant.City != null && restaurant.City.ToLower() == city.ToLower()
                           select new ReviewDto
                           {

@@ -1,7 +1,7 @@
 ﻿using RestaurantReviews.Data;
 using RestaurantReviews.Interfaces.Dao;
 using RestaurantReviews.Models.Dto;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Data.Entity.Core;
 
 namespace RestaurantReviews.Dao
