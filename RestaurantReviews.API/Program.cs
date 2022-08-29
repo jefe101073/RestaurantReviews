@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using RestaurantReviews.Dao;
 using RestaurantReviews.Data;
 using RestaurantReviews.Interfaces.Dao;
@@ -16,7 +17,19 @@ builder.Services.AddDbContext<RestaurantReviewDataContext>(
 // Default Swagger setup for basic API Documentation
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1",
+        new OpenApiInfo
+        {
+            Title = "Jeff McCann - Restaurant Reviews API - V2",
+            Version = "v2"
+        }
+     );
+    // Default path for Swagger documentation
+    var filePath = Path.Combine(System.AppContext.BaseDirectory, "RestaurantReviews.API.xml");
+    c.IncludeXmlComments(filePath);
+});
 
 builder.Services.AddScoped<IRestaurantDao, RestaurantDao>();
 builder.Services.AddScoped<IReviewDao, ReviewDao>();

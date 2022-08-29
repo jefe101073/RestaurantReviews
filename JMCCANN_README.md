@@ -19,5 +19,61 @@ To Set-up the Database:
 5.  Issue the command "Update-Database" in the Package Manager Console.  (if that fails, issue the command:  "EntityFrameworkCore\Update-Database")
 
 
-## Functionality
-There are 3 controllers 
+API Documentation through Swagger and OpenAPI Documentation:
+
+1.  The documentation should be automatically built and stored in the RestaurantReviews.API/bin/Debug/net6.0/RestaurantReviews.API.xml file.
+2.  The option to turn this off/on is in the RestaurantReviews.API project Build -> Output settings under "Documentation File".  Please ensure that it is turned on (checked).  If not, there will be an error on startup in Program.cs where the AddSwaggerGen is set up because it is looking for a specific XML file.
+
+## Documentation for API
+Because the Swagger OpenApiInfo is set up, the comments that decorate each Contoller and each Controller method will show up in the Swagger page upon debugging the API.  The comments are intended to provide enough information for a developer working on the front-end to be able to use the API effectively.  
+
+## Design
+I decided to use Data Access Objects (DAO) to add a layer of separation between the Data and the API.  Even though DAO is an older concept, it still works pretty well in this example.  The data transferred between the DAO and API are very simple DTOs (Data Transfer Objects).  The DAO layer is very basic and involves the data access through Entity Framework and linq calls.  If more complex business logic is needed, a service layer could be provided as another abstraction that would be added between the DAO and API.  However, since the business logic in this example is basic, I decided to only provide the one level of abstraction.  The DTOs are also very simple which include getters and setters, but can be used to pass distinct data if needed.  For example, I used a DTO called RestaurantAndReviewDto to be used when a user creates a review for a restaurant that is not already in the system.  It is used to create both a new Restaurant and a new Review.
+
+The database design is also very basic.  I used code-first Entity Framework Core because it works very nicely with Postgres and should be supported on many platforms.  The major tables are User, Restaurant and Review.  The data-types are likewise as simple as possible.
+
+## Major Functionality
+
+1. Create a user
+- This was implemented in the UsersController -> AddUserAsync
+
+2. Create a restaurant
+- This was implemented in the RestaurantsController -> AddRestaurantAsync
+
+3. Create a review for a restaurant
+- This was implemented in the ReviewsController -> AddReviewAsync and also in AddRestaurantAndReviewAsync
+
+4. Get of a list of reviews by user
+- This was implemented in ReviewsController -> GetActiveReviewsByUserAsync
+
+5. Get of a list of reviews by restaurant
+- This was implemented in ReviewsController -> GetActiveReviewsByRestaurantAsync
+
+6. Get a list of restaurants by city
+- This was implemented in RestaurantsController -> GetActiveRestaurantsByCityAsync
+
+7. Delete a review
+- This was implemented in ReviewsController -> DeleteReviewAsync
+
+8. Block a user from posting a review
+- This was implemented by setting the user as blocked in UsersController -> BlockUserAsync, and to prevent a review from going through if a user was blocked was implemented in UserDao.cs -> IsUserBlockedOrDeletedAsync
+
+## Extra Functionality -- Additional twists and ideas I implemented just for fun.
+
+1. Authenticate user
+2. Unblock a user
+3. Delete a user
+4. Undelete a user
+5. Delete a restaurant
+6. Add price rating and star rating to a review
+7. Every new review will update the restaurant's price rating and star rating 
+
+# Things To Consider
+My answers to the things to consider:
+
+* We are building a mobile application independent of your development, what might be the best way to communicate to other developer how to user your API?
+- I decided to use Swagger to add some basic API documentation.  In the documentation, I tried to specify any restrictions or errors that might be thrown because of issues.  Also, Swagger does a very nice job of showing the endpoints, allowing to "Try it out" and documenting the DTOs.
+
+* After you turn your code over for the API, how might you help ensure future developers can feel confident updating it?
+- I added the DAO layer to allow for the API layer to be as clean as possible.  Developers should feel confident because they can simply add/update/remove any functionality by following the same pattern.  If backwards compatibility support is needed, Developers will need to be mindful of Database structural changes and functional changes.  I also added a small set of unit tests for the controllers that implement the DAO functionality so that if breaking changes are made, the unit tests will fail.
+

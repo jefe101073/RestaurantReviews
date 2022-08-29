@@ -1,12 +1,9 @@
 ﻿using RestaurantReviews.Data;
 using RestaurantReviews.Interfaces.Dao;
 using RestaurantReviews.Models.Dto;
-using System;
-using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Core;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace RestaurantReviews.Dao
 {
@@ -20,83 +17,118 @@ namespace RestaurantReviews.Dao
         {
             _context = context;
         }
-        public RestaurantDto? AddRestaurant(RestaurantDto restaurant)
+        public async Task<RestaurantDto?> AddRestaurantAsync(AddRestaurantDto restaurant)
         {
-            // Check if already exists - same name, city, state and zip - using exact equality
-            // I decieded to use ordinal instead of ignore case, ignore case might be more user friendly
-            var checkRestaurant = _context.Restaurants.FirstOrDefault(x =>
-                x.Name != null && x.Name.Equals(restaurant.Name, StringComparison.Ordinal)
-                &&
-                x.City != null && x.City.Equals(restaurant.City, StringComparison.Ordinal)
-                &&
-                x.State != null && x.State.Equals(restaurant.State, StringComparison.Ordinal)
-                &&
-                x.PostalCode != null && x.PostalCode.Equals(restaurant.PostalCode, StringComparison.Ordinal)
-                );
+            // Check if already exists - same name, city, state and zip - using exact equality.
+            // Ignore case might be more user friendly.
+            var checkRestaurant = _context.Restaurants?.FirstOrDefault(x => x.Name == restaurant.Name && x.City == restaurant.City &&
+                x.State == restaurant.State && x.PostalCode == restaurant.PostalCode);
 
-            if (checkRestaurant == null) // Add new
+            if (checkRestaurant != null)
             {
-                _context.Add(new Restaurant
-                {
-                    Id = restaurant.Id,
-                    Name = restaurant.Name,
-                    Description = restaurant.Description,
-                    Address1 = restaurant.Address1,
-                    Address2 = restaurant.Address2,
-                    City = restaurant.City,
-                    State = restaurant.State,
-                    PostalCode = restaurant.PostalCode,
-                    IsDeleted = restaurant.IsDeleted,
-                    PriceRatingId = restaurant.PriceRatingId,
-                    StarRatingId = restaurant.StarRatingId,
-                    DeletedByUserId = restaurant.DeletedByUserId,
-                    DeletedOn = restaurant.DeletedOn
-                });
-                _context.SaveChanges();
+                throw new ArgumentException($"Error.  Restuarant already exists in the system.{restaurant.Name}", nameof(restaurant.Name));
             }
-            return restaurant; // otherwise return what was passed in
+            var myRestaurant = new Restaurant
+            {
+                // Id is auto-generated
+                Name = restaurant.Name,
+                Description = restaurant.Description,
+                Address1 = restaurant.Address1,
+                Address2 = restaurant.Address2,
+                City = restaurant.City,
+                State = restaurant.State,
+                PostalCode = restaurant.PostalCode,
+                IsDeleted = restaurant.IsDeleted
+            };
+            await _context.Restaurants.AddAsync(myRestaurant);
+            await _context.SaveChangesAsync();
+
+            return new RestaurantDto
+            {
+                Id = myRestaurant.Id, // new Id
+                Name = myRestaurant.Name,
+                Description = myRestaurant.Description,
+                Address1 = myRestaurant.Address1,
+                Address2 = myRestaurant.Address2,
+                City = myRestaurant.City,
+                State = myRestaurant.State,
+                PostalCode = myRestaurant.PostalCode,
+                IsDeleted = myRestaurant.IsDeleted,
+                PriceRatingId = myRestaurant.PriceRatingId,
+                StarRatingId = myRestaurant.StarRatingId,
+                DeletedByUserId = myRestaurant.DeletedByUserId,
+                DeletedOn = myRestaurant.DeletedOn
+            };
         }
 
-        public void DeleteRestaurant(int id, int currentUserId)
+        public async Task DeleteRestaurantAsync(int id, int currentUserId)
         {
-            var restaurant = _context.Restaurants.FirstOrDefault(x => x.Id == id);
-            // Can't delete user if doesn't exist
+            var restaurant = await _context.Restaurants.FirstOrDefaultAsync(x => x.Id == id);
+            // Can't delete restaurant if doesn't exist
             if (restaurant == null)
             {
                 throw new ObjectNotFoundException();
             }
             restaurant.IsDeleted = true;
             restaurant.DeletedByUserId = currentUserId;
-            restaurant.DeletedOn = DateTime.Now;
-            _context.SaveChanges();
+            restaurant.DeletedOn = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
         }
 
-        public IEnumerable<RestaurantDto> GetActiveRestaurants()
+        public async Task<IEnumerable<RestaurantDto>> GetActiveRestaurantsAsync()
         {
             var restaurants = from restaurant in _context.Restaurants
-                        where restaurant.IsDeleted == false
-                        select new RestaurantDto
-                        {
-                            Id = restaurant.Id,
-                            Name = restaurant.Name,
-                            Description = restaurant.Description,
-                            Address1 = restaurant.Address1,
-                            Address2 = restaurant.Address2,
-                            City = restaurant.City,
-                            State = restaurant.State,
-                            PostalCode = restaurant.PostalCode,
-                            IsDeleted = restaurant.IsDeleted,
-                            PriceRatingId = restaurant.PriceRatingId,
-                            StarRatingId = restaurant.StarRatingId,
-                            DeletedByUserId = restaurant.DeletedByUserId,
-                            DeletedOn = restaurant.DeletedOn
-                        };
-            return restaurants;
+                              where restaurant.IsDeleted == false
+                              select new RestaurantDto
+                              {
+                                  Id = restaurant.Id,
+                                  Name = restaurant.Name,
+                                  Description = restaurant.Description,
+                                  Address1 = restaurant.Address1,
+                                  Address2 = restaurant.Address2,
+                                  City = restaurant.City,
+                                  State = restaurant.State,
+                                  PostalCode = restaurant.PostalCode,
+                                  IsDeleted = restaurant.IsDeleted,
+                                  PriceRatingId = restaurant.PriceRatingId,
+                                  StarRatingId = restaurant.StarRatingId,
+                                  DeletedByUserId = restaurant.DeletedByUserId,
+                                  DeletedOn = restaurant.DeletedOn
+                              };
+            return await restaurants.ToListAsync();
         }
 
-        public RestaurantDto? GetRestaurant(int id)
+        // Gets all restaurants that are not deleted and are in the specified city (ignore case)
+        public async Task<IEnumerable<RestaurantDto>?> GetActiveRestaurantsByCityAsync(string city)
         {
-            var restaurant = _context.Restaurants.FirstOrDefault(z => z.Id == id);
+            if (string.IsNullOrEmpty(city))
+            {
+                return null;
+            }
+            var restaurants = from restaurant in _context.Restaurants
+                              where restaurant.IsDeleted == false && restaurant.City != null && restaurant.City.ToLower() == city.ToLower()
+                              select new RestaurantDto
+                              {
+                                  Id = restaurant.Id,
+                                  Name = restaurant.Name,
+                                  Description = restaurant.Description,
+                                  Address1 = restaurant.Address1,
+                                  Address2 = restaurant.Address2,
+                                  City = restaurant.City,
+                                  State = restaurant.State,
+                                  PostalCode = restaurant.PostalCode,
+                                  IsDeleted = restaurant.IsDeleted,
+                                  PriceRatingId = restaurant.PriceRatingId,
+                                  StarRatingId = restaurant.StarRatingId,
+                                  DeletedByUserId = restaurant.DeletedByUserId,
+                                  DeletedOn = restaurant.DeletedOn
+                              };
+            return await restaurants.ToListAsync();
+        }
+
+        public async Task<RestaurantDto?> GetRestaurantAsync(int id)
+        {
+            var restaurant = await _context.Restaurants.FirstOrDefaultAsync(z => z.Id == id);
             if (restaurant == null)
             {
                 return null;

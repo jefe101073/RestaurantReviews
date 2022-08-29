@@ -2,9 +2,9 @@
 using RestaurantReviews.Data;
 using RestaurantReviews.Interfaces.Dao;
 using RestaurantReviews.Models.Dto;
+using RestaurantReviews.Tests.DataForTests;
 
-
-namespace RestaurantReviews.Tests.Dao
+namespace RestaurantReviews.Tests.ControllersTests
 {
     /// <summary>
     /// This test class tests the Users controller and the functionality in the Dao that the controller directly accesses.
@@ -29,66 +29,54 @@ namespace RestaurantReviews.Tests.Dao
         [TestInitialize()]
         public void TestInitialize()
         {
-            var UserList = new List<UserDto>()
-            {
-                new UserDto()
-                {
-                    Id = 1,
-                    FirstName = "Admin",
-                    LastName = "User",
-                    Email = "admin@admin.com",
-                    IsDeleted = false,
-                    IsUserBlocked = false,
-                    Password = DataHelpers.PasswordEncrypt("password")
-                },
-                new UserDto()
-                {
-                    Id = 2,
-                    FirstName = "Jeff",
-                    LastName = "McCann",
-                    Email = "jefe101073@gmail.com",
-                    IsDeleted = false,
-                    IsUserBlocked = false,
-                    Password = DataHelpers.PasswordEncrypt("password")
-                },
-                new UserDto()
-                {
-                    Id = 3,
-                    FirstName = "Deleted",
-                    LastName = "McDeleterson",
-                    Email = "deleted@gmail.com",
-                    IsDeleted = true,
-                    IsUserBlocked = false,
-                    Password = DataHelpers.PasswordEncrypt("deleted")
-                }
-            };
+            TestData.LoadData(); // Reset the test data
 
             // Mock functionality
-            _userDaoMock.Setup(x => x.GetActiveUsers()).Returns(UserList.Where(u => u.IsDeleted == false));
+            _userDaoMock.Setup(x => x.GetActiveUsersAsync()).ReturnsAsync(TestData.UserList.Where(u => u.IsDeleted == false));
 
-            _userDaoMock.Setup(x => x.GetUser(It.IsAny<int>())).Returns((int i) => UserList.FirstOrDefault(z => z.Id == i));
+            _userDaoMock.Setup(x => x.GetUserAsync(It.IsAny<int>())).ReturnsAsync((int i) => TestData.UserList.FirstOrDefault(z => z.Id == i));
 
-            _userDaoMock.Setup(x => x.AddUser(It.IsAny<UserDto>())).Returns(
+            _userDaoMock.Setup(x => x.AddUserAsync(It.IsAny<UserDto>())).ReturnsAsync(
                 (UserDto target) =>
                 {
-                    UserList.Add(target);
+                    TestData.UserList.Add(target);
                     return target;
                 });
 
-            _userDaoMock.Setup(x => x.DeleteUser(It.IsAny<int>(), It.IsAny<int>())).Callback((int id, int currentUserId) =>
+            _userDaoMock.Setup(x => x.DeleteUserAsync(It.IsAny<int>(), It.IsAny<int>())).Callback((int id, int currentUserId) =>
             {
-                var itemToUpdate = UserList.FirstOrDefault(u => u.Id == id);
+                var itemToUpdate = TestData.UserList.FirstOrDefault(u => u.Id == id);
                 if (itemToUpdate == null) return;
                 itemToUpdate.IsDeleted = true;
-                itemToUpdate.DeletedOn = DateTime.Now;
+                itemToUpdate.DeletedOn = DateTime.UtcNow;
                 itemToUpdate.DeletedByUserId = currentUserId;
                 return;
-            }).Verifiable();
+            });
 
-            _userDaoMock.Setup(x => x.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(
+            _userDaoMock.Setup(x => x.UndeleteUserAsync(It.IsAny<int>())).Callback((int id) =>
+            {
+                var itemToUpdate = TestData.UserList.FirstOrDefault(u => u.Id == id);
+                if (itemToUpdate == null) return;
+                itemToUpdate.IsDeleted = false;
+                itemToUpdate.DeletedOn = null;
+                itemToUpdate.DeletedByUserId = null;
+                return;
+            });
+
+            _userDaoMock.Setup(x => x.IsUserBlockedOrDeletedAsync(It.IsAny<int>())).ReturnsAsync((int userId) =>
+            {
+                var user = TestData.UserList.FirstOrDefault(u => u.Id == userId);
+                if(user != null)
+                {
+                    return user.IsDeleted || user.IsUserBlocked;
+                }
+                throw new ArgumentException($"Error.  User does not exist in the system.{userId}", nameof(userId));
+            });
+
+            _userDaoMock.Setup(x => x.AuthenticateUserAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(
                 (string email, string password) =>
                 {
-                    var user = UserList.FirstOrDefault(e => e.Email == email);
+                    var user = TestData.UserList.FirstOrDefault(e => e.Email == email);
                     if(user == null || user.Password == null)
                     {
                         return false;
@@ -96,7 +84,6 @@ namespace RestaurantReviews.Tests.Dao
                     var decryptedPassword = DataHelpers.PasswordDecrypt(user.Password);
                     return password.Equals(decryptedPassword, StringComparison.Ordinal);
                 });
-
         }
 
         [TestCleanup()]
@@ -107,7 +94,7 @@ namespace RestaurantReviews.Tests.Dao
         }
 
         [TestMethod]
-        public void CanGetActiveUsers()
+        public async Task CanGetActiveUsersAsync()
         {
             // Arrange
             var controller = GetControllerInstance();
@@ -137,7 +124,8 @@ namespace RestaurantReviews.Tests.Dao
             };
 
             // Act
-            var actualUsers = controller.GetActiveUsers().ToList();
+            var users = await controller.GetActiveUsersAsync();
+            var actualUsers = users.ToList();
 
             // Assert
             Assert.IsNotNull(actualUsers);
@@ -153,7 +141,7 @@ namespace RestaurantReviews.Tests.Dao
         }
 
         [TestMethod]
-        public void CanGetSpecificUser()
+        public async Task CanGetSpecificUserAsync()
         {
             // Arrange
             var controller = GetControllerInstance();
@@ -170,7 +158,7 @@ namespace RestaurantReviews.Tests.Dao
             };
 
             // Act
-            var actualUser = controller.GetUser(2);
+            var actualUser = await controller.GetUserAsync(2);
 
             // Assert
             Assert.IsNotNull(actualUser);
@@ -182,7 +170,7 @@ namespace RestaurantReviews.Tests.Dao
         }
 
         [TestMethod]
-        public void CanAddUser()
+        public async Task CanAddUserAsync()
         {
             // Arrange
             var controller = GetControllerInstance();
@@ -199,9 +187,9 @@ namespace RestaurantReviews.Tests.Dao
             };
 
             // Act
-            var actualUser = controller.AddUser(expectedUser);
+            var actualUser = await controller.AddUserAsync(expectedUser);
 
-            var addedUser = controller.GetUser(4);
+            var addedUser = await controller.GetUserAsync(4);
 
             // Assert
             Assert.IsNotNull(addedUser);
@@ -213,15 +201,15 @@ namespace RestaurantReviews.Tests.Dao
         }
 
         [TestMethod]
-        public void CanDeleteUser()
+        public async Task CanDeleteUserAsync()
         {
             // Arrange
             var controller = GetControllerInstance();
 
             // Act
-            controller.DeleteUser(2, 1);
+            await controller.DeleteUserAsync(2, 1);
 
-            var deletedUser = controller.GetUser(2);
+            var deletedUser = await controller.GetUserAsync(2);
 
             // Assert
             Assert.IsNotNull(deletedUser);
@@ -229,12 +217,47 @@ namespace RestaurantReviews.Tests.Dao
             Assert.IsNotNull(deletedUser.DeletedByUserId);
             Assert.IsNotNull(deletedUser.DeletedOn);
 
-            Assert.IsTrue(deletedUser.DeletedOn > DateTime.Today);
-            Assert.IsTrue(deletedUser.DeletedOn < DateTime.Today.AddDays(1));
+            Assert.IsTrue(deletedUser.DeletedOn < DateTime.UtcNow);
+            Assert.IsTrue(deletedUser.DeletedOn > DateTime.UtcNow.AddDays(-1));
         }
 
         [TestMethod]
-        public void CanAuthenticateUser()
+        public async Task CanUnDeleteUserAsync()
+        {
+            // Arrange
+            var controller = GetControllerInstance();
+
+            // Act
+            await controller.DeleteUserAsync(2, 1);
+
+            await controller.UndeleteUserAsync(2);
+
+            var undeletedUser = await controller.GetUserAsync(2);
+
+            // Assert
+            Assert.IsNotNull(undeletedUser);
+            Assert.AreEqual(false, undeletedUser.IsDeleted);
+            Assert.IsNull(undeletedUser.DeletedByUserId);
+            Assert.IsNull(undeletedUser.DeletedOn);
+        }
+
+        [TestMethod]
+        public async Task CanCheckIfUserIsDeletedAsync()
+        {
+            // Arrange
+            var controller = GetControllerInstance();
+
+            // Act
+            await controller.DeleteUserAsync(2, 1);
+
+            var isUserDeleted = await controller.IsUserBlockedOrDeletedAsync(2);
+
+            // Assert
+            Assert.IsTrue(isUserDeleted);
+        }
+
+        [TestMethod]
+        public async Task CanAuthenticateUserAsync()
         {
             // Arrange
             var controller = GetControllerInstance();
@@ -249,10 +272,10 @@ namespace RestaurantReviews.Tests.Dao
                 IsUserBlocked = false,
                 Password = DataHelpers.PasswordEncrypt("password")
             };
-            controller.AddUser(expectedUser);
+            await controller.AddUserAsync(expectedUser);
 
             // Act
-            var canAuthenticate = controller.AuthenticateUser(expectedUser.Email, "password");
+            var canAuthenticate = await controller.AuthenticateUserAsync(expectedUser.Email, "password");
 
             // Assert
             Assert.IsTrue(canAuthenticate);

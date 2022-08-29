@@ -4,12 +4,14 @@ namespace RestaurantReviews.Interfaces.Dao
 {
     public interface IUserDao
     {
-        UserDto? AddUser(UserDto user);
-        bool AuthenticateUser(string email, string password);
-        void BlockUser(int id);
-        void DeleteUser(int id, int currentUserId);
-        IEnumerable<UserDto> GetActiveUsers();
-        UserDto? GetUser(int id);
-        void UnBlockUser(int id);
+        Task<UserDto?> AddUserAsync(AddUserDto user);
+        Task<bool> AuthenticateUserAsync(string email, string password);
+        Task BlockUserAsync(int id);
+        Task DeleteUserAsync(int id, int currentUserId);
+        Task<IEnumerable<UserDto>> GetActiveUsersAsync();
+        Task<UserDto?> GetUserAsync(int id);
+        Task<bool> IsUserBlockedOrDeletedAsync(int userId);
+        Task UnBlockUserAsync(int id);
+        Task UndeleteUserAsync(int id);
     }
 }

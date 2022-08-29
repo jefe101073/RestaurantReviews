@@ -4,9 +4,10 @@ namespace RestaurantReviews.Interfaces.Dao
 {
     public interface IRestaurantDao
     {
-        RestaurantDto? AddRestaurant(RestaurantDto user);
-        void DeleteRestaurant(int id, int currentUserId);
-        IEnumerable<RestaurantDto> GetActiveRestaurants();
-        RestaurantDto? GetRestaurant(int id);
+        Task<RestaurantDto?> AddRestaurantAsync(AddRestaurantDto restaurant);
+        Task DeleteRestaurantAsync(int id, int currentUserId);
+        Task<IEnumerable<RestaurantDto>> GetActiveRestaurantsAsync();
+        Task<IEnumerable<RestaurantDto>?> GetActiveRestaurantsByCityAsync(string city);
+        Task <RestaurantDto?> GetRestaurantAsync(int id);
     }
 }

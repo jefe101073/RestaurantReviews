@@ -12,7 +12,7 @@ using RestaurantReviews.Data;
 namespace RestaurantReviews.Data.Migrations
 {
     [DbContext(typeof(RestaurantReviewDataContext))]
-    [Migration("20220827193954_InitialDatabase")]
+    [Migration("20220828194418_InitialDatabase")]
     partial class InitialDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,10 +110,10 @@ namespace RestaurantReviews.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("PriceRatingId")
+                    b.Property<int?>("PriceRatingId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("StarRatingId")
+                    b.Property<int?>("StarRatingId")
                         .HasColumnType("integer");
 
                     b.Property<string>("State")

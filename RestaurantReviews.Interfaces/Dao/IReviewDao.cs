@@ -4,9 +4,14 @@ namespace RestaurantReviews.Interfaces.Dao
 {
     public interface IReviewDao
     {
-        ReviewDto? AddReview(ReviewDto user);
-        void DeleteReview(int id, int currentUserId);
-        IEnumerable<ReviewDto> GetActiveReviews();
-        ReviewDto? GetReview(int id);
+        Task<RestaurantAndReviewDto?> AddRestaurantAndReviewAsync(AddRestaurantAndReviewDto restaurantAndReview);
+        Task<ReviewDto?> AddReviewAsync(AddReviewDto user);
+        Task CalculateAndUpdateRestaurantRatingsAsync(int restaurantId, int priceRatingId, int starRatingId);
+        Task DeleteReviewAsync(int id, int currentUserId);
+        Task<IEnumerable<ReviewDto>> GetActiveReviewsAsync();
+        Task<IEnumerable<ReviewDto>> GetActiveReviewsByRestaurantAsync(int restaurantId);
+        Task<IEnumerable<ReviewDto>?> GetActiveReviewsByRestaurantNameAndCityAsync(string name, string city);
+        Task<IEnumerable<ReviewDto>> GetActiveReviewsByUserAsync(int userId);
+        Task<ReviewDto?> GetReviewAsync(int id);
     }
 }

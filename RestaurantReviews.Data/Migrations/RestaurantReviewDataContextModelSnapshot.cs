@@ -108,10 +108,10 @@ namespace RestaurantReviews.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("PriceRatingId")
+                    b.Property<int?>("PriceRatingId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("StarRatingId")
+                    b.Property<int?>("StarRatingId")
                         .HasColumnType("integer");
 
                     b.Property<string>("State")
